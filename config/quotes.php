@@ -31,7 +31,7 @@ return [
     ],
     'keyboard' => [
         new Quote('Keyboard not found...Press any F1 to continue.'),
-        new Quote('Let’s call it an accidental feature.', 'Larry Wall'),
+        new Quote('I am not a keyboard person. The mouse is better.'),
     ],
     'bot' => [
         new Quote('It\'s alive! It\'s alive!', 'Frankenstein (1931)'),
@@ -44,6 +44,7 @@ return [
         new Quote('Nobody expects the Spanish inquisition.', 'Monty Python'),
     ],
     'programming' => [
+        new Quote('Let’s call it an accidental feature.', 'Larry Wall'),
         new Quote('One of my most productive days was throwing away 1000 lines of code.', 'Ken Thompson'),
         new Quote('I don\'t care if it works on your machine! We are not shipping your machine!', 'Vidiu'),
         new Quote('First, solve the problem.Then write the code.', 'John Johnson'),

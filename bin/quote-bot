@@ -16,9 +16,9 @@ $discord = new Discord(['token' => $bot->token, 'logger' => $bot->logger]);
 $discord->on('ready', function (Discord $discord) use ($bot) {
     try {
         $welcomeMessage = MessageBuilder::new()->setContent($bot->welcomeMessage);
-        foreach ($bot->channels as $channel) {
-            $bot->logger->info("Send welcome message to channel {$channel}");
-            $channel = $discord->getChannel($channel);
+        foreach ($bot->channels as $channelId) {
+            $bot->logger->info("Send welcome message to channel {$channelId}");
+            $channel = $discord->getChannel($channelId);
             if ($channel === null) {
                 continue;
             }
@@ -31,6 +31,10 @@ $discord->on('ready', function (Discord $discord) use ($bot) {
     $discord->on(Event::MESSAGE_CREATE, function (Message $message, Discord $discord) use ($bot) {
         try {
             if ($message->member->id === $bot->id) {
+                return;
+            }
+
+            if (!in_array($message->channel_id, $bot->channels)) {
                 return;
             }
 
