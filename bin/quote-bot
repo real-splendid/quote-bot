@@ -9,6 +9,7 @@ use Discord\Discord;
 use Discord\Parts\Channel\Message;
 use Discord\WebSockets\Event;
 use QuoteBot\Bot;
+use QuoteBot\TextWithCitation;
 
 $bot = new Bot();
 
@@ -22,6 +23,11 @@ $discord->on('ready', function (Discord $discord) use ($bot) {
             if ($channel === null) {
                 continue;
             }
+
+            if ($bot->welcomeMessage === '') {
+                continue;
+            }
+
             $channel->sendMessage($welcomeMessage);
         }
     } catch (Throwable $th) {
@@ -48,9 +54,9 @@ $discord->on('ready', function (Discord $discord) use ($bot) {
             }
 
             $responseMessage = MessageBuilder::new()
-                ->setContent("> {$message->content}\n{$responseQuote}");
+                ->setContent(new TextWithCitation($responseQuote, $message->content));
             $discord->getLoop()->addTimer(
-                $bot->messageDelayInMinutes,
+                $bot->messageDelayInSeconds,
                 fn () => $message->channel->sendMessage($responseMessage)
             );
         } catch (Throwable $th) {

@@ -19,7 +19,7 @@ class Bot
     public string $id;
     public string $token;
     public array $channels = [];
-    public int $messageDelayInMinutes = 0;
+    public int $messageDelayInSeconds = 0;
     public string $welcomeMessage;
 
     public function __construct()
@@ -32,7 +32,7 @@ class Bot
         $this->id = $settings['botId'];
         $this->token = $settings['token'];
         $this->channels = $settings['botChannels'];
-        $this->messageDelayInMinutes = $settings['botMessageDelay'];
+        $this->messageDelayInSeconds = $settings['botMessageDelay'];
         $this->welcomeMessage = $settings['botWelcomeMessage'];
         $this->themePatterns = $settings['themePatterns'];
         $this->logger = new Logger('bot');

@@ -20,6 +20,7 @@ return [
         new Quote('An infinite number of monkeys typing into GNU Emacs would never make a good program.', 'Linus Torvalds'),
         new Quote('Emacs is a nice operating system, but I prefer UNIX.', 'Tom Christiansen'),
         new Quote('Calling EMACS an editor is like calling the Earth a hunk of dirt.', 'Chris DiBona'),
+        new Quote('Mb I should buy foot pedal for Ctrl key :thinking:'),
     ],
     'code-editor-other' => [
         new Quote('Use emacs instead.'),
@@ -28,15 +29,21 @@ return [
     'unix' => [
         new Quote('Linux is only free if your time has no value.', 'Jamie Zawinski'),
         new Quote('Just don’t create a file called `-rf.`', 'Larry Wall'),
+        new Quote('People disagree with me. I just ignore them.', 'Linus Torvalds'),
     ],
     'keyboard' => [
         new Quote('Keyboard not found...Press any F1 to continue.'),
         new Quote('I am not a keyboard person. The mouse is better.'),
     ],
     'bot' => [
-        new Quote('It\'s alive! It\'s alive!', 'Frankenstein (1931)'),
+        // new Quote('It\'s alive! It\'s alive!', 'Frankenstein (1931)'),
         new Quote('They did not know it was impossible, so they did it!', 'Mark Twain'),
         new Quote('You can kill a man but you can’t kill an idea.', 'Medgar Evers'),
+        new Quote('Power belongs to those who take it.', 'Mr. Robot (2015)'),
+        new Quote('Artificial Intelligence usually beats natural stupidity.'),
+        new Quote('Anything Less Than Immortality Is A Complete Waste Of Time.', 'Futurama'),
+        new Quote('Of All The Friends I\'ve Had, You\'re The First.', 'Futurama'),
+        new Quote('I\'m Going To Build My Own Theme Park! With Blackjack! And Hookers!', 'Futurama'),
     ],
     'microsoft' => [
         new Quote('Microsoft is not the answer. Microsoft is the question. \"No\" is the answer.', 'Erik Naggum'),
