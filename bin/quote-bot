@@ -1,0 +1,57 @@
+#!/usr/bin/env php
+
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Discord\Builders\MessageBuilder;
+use Discord\Discord;
+use Discord\Parts\Channel\Message;
+use Discord\WebSockets\Event;
+use QuoteBot\Bot;
+
+$bot = new Bot();
+
+$discord = new Discord(['token' => $bot->token, 'logger' => $bot->logger]);
+$discord->on('ready', function (Discord $discord) use ($bot) {
+    try {
+        $welcomeMessage = MessageBuilder::new()->setContent($bot->welcomeMessage);
+        foreach ($bot->channels as $channel) {
+            $bot->logger->info("Send welcome message to channel {$channel}");
+            $channel = $discord->getChannel($channel);
+            if ($channel === null) {
+                continue;
+            }
+            $channel->sendMessage($welcomeMessage);
+        }
+    } catch (Throwable $th) {
+        $bot->logger->error($th->getMessage(), $th->getTrace());
+    }
+
+    $discord->on(Event::MESSAGE_CREATE, function (Message $message, Discord $discord) use ($bot) {
+        try {
+            if ($message->member->id === $bot->id) {
+                return;
+            }
+
+            if ($bot->isOnCooldown()) {
+                return;
+            }
+
+            $responseQuote = $bot->getResponseQuoteForText($message->content);
+            if ($responseQuote->isEmpty()) {
+                return;
+            }
+
+            $responseMessage = MessageBuilder::new()
+                ->setContent("> {$message->content}\n{$responseQuote}");
+            $discord->getLoop()->addTimer(
+                $bot->messageDelayInMinutes,
+                fn () => $message->channel->sendMessage($responseMessage)
+            );
+        } catch (Throwable $th) {
+            $bot->logger->error($th->getMessage(), $th->getTrace());
+        }
+    });
+});
+$discord->run();
