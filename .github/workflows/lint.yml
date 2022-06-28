@@ -1,0 +1,20 @@
+name: static analysis
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  analyse:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+      - name: Setup
+        run: make setup
+      - name: Analyse
+        run: make analyse

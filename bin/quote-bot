@@ -2,65 +2,37 @@
 
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+$applicationPath = realpath(__DIR__ . '/..');
+require_once "{$applicationPath}/vendor/autoload.php";
 
-use Discord\Builders\MessageBuilder;
 use Discord\Discord;
 use Discord\Parts\Channel\Message;
 use Discord\WebSockets\Event;
+use Dotenv\Dotenv;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use QuoteBot\Bot;
-use QuoteBot\TextWithCitation;
+use QuoteBot\DiscordMessage;
+use QuoteBot\DiscordMessenger;
 
-$bot = new Bot();
+$dotenv = Dotenv::createImmutable($applicationPath);
+$dotenv->safeLoad();
+$settings = require_once "{$applicationPath}/config/settings.php";
 
-$discord = new Discord(['token' => $bot->token, 'logger' => $bot->logger]);
-$discord->on('ready', function (Discord $discord) use ($bot) {
-    try {
-        $welcomeMessage = MessageBuilder::new()->setContent($bot->welcomeMessage);
-        foreach ($bot->channels as $channelId) {
-            $bot->logger->info("Send welcome message to channel {$channelId}");
-            $channel = $discord->getChannel($channelId);
-            if ($channel === null) {
-                continue;
-            }
+$logger = new Logger('bot');
+$logger->pushHandler(new StreamHandler('php://stdout', $settings['logLevel']));
 
-            if ($bot->welcomeMessage === '') {
-                continue;
-            }
+$discord = new Discord(['token' => $settings['bot']['token'], 'logger' => $logger]);
+$discord->on('ready', function (Discord $discord) use ($settings, $logger) {
+    $messenger = new DiscordMessenger($discord);
+    $bot = new Bot($messenger, $settings, $logger);
 
-            $channel->sendMessage($welcomeMessage);
-        }
-    } catch (Throwable $th) {
-        $bot->logger->error($th->getMessage(), $th->getTrace());
-    }
-
-    $discord->on(Event::MESSAGE_CREATE, function (Message $message, Discord $discord) use ($bot) {
+    $discord->on(Event::MESSAGE_CREATE, function (Message $message) use ($bot, $logger) {
         try {
-            if ($message->member->id === $bot->id) {
-                return;
-            }
-
-            if (!in_array($message->channel_id, $bot->channels)) {
-                return;
-            }
-
-            if ($bot->isOnCooldown()) {
-                return;
-            }
-
-            $responseQuote = $bot->getResponseQuoteForText($message->content);
-            if ($responseQuote->isEmpty()) {
-                return;
-            }
-
-            $responseMessage = MessageBuilder::new()
-                ->setContent(new TextWithCitation($responseQuote, $message->content));
-            $discord->getLoop()->addTimer(
-                $bot->messageDelayInSeconds,
-                fn () => $message->channel->sendMessage($responseMessage)
-            );
+            $wrappedMessage = new DiscordMessage($message);
+            $bot->handleIncomingMessage($wrappedMessage);
         } catch (Throwable $th) {
-            $bot->logger->error($th->getMessage(), $th->getTrace());
+            $logger->error($th->getMessage(), $th->getTrace());
         }
     });
 });

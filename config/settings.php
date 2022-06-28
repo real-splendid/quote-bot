@@ -3,22 +3,25 @@
 use Psr\Log\LogLevel;
 
 return [
-    'token' => env('DISCORD_BOT_TOKEN'),
-    'botId' => env('DISCORD_BOT_ID'),
-    'botChannels' => json_decode(env('DISCORD_BOT_HOME_CHANNELS', '[]'), true),
-    'botMessageDelay' => env('DISCORD_BOT_MESSAGE_DELAY', 2),
-    'botWelcomeMessage' => env('DISCORD_BOT_WELCOME_MESSAGE', ""),
-    'botCooldown' => env('DISCORD_BOT_COOLDOWN', 25),
+    'logLevel' => env('DISCORD_LOG_LEVEL', LogLevel::INFO),
 
-    'logLevel' => env('DISCORD_BOT_LOG_LEVEL', LogLevel::INFO),
+    'bot' => [
+        'token' => env('DISCORD_BOT_TOKEN'),
+        'channelIds' => explode(',', env('DISCORD_BOT_CHANNEL_IDS', '')),
+        'messageDelayInSeconds' => env('DISCORD_BOT_MESSAGE_DELAY_IN_SECONDS', 2),
+        'welcomeText' => env('DISCORD_BOT_WELCOME_TEXT', ""),
+        'cooldownInMinutes' => env('DISCORD_BOT_COOLDOWN_IN_MINUTES', 25),
+    ],
+
+    'quotesPath' => __DIR__ . '/quotes.php',
 
     'themePatterns' => [
         'greeting' => '/\b(hi|hello|greet|greetings|good\s+morn)\b/iu',
         'bye' => '/\b(bye|goodbye|cya|see\s*ya|good\s*night|gonna\s+go)\b/iu',
-        'support' => '/\b(
-            it\'s\s+hard|very\s+hard
-            need\s+help|can\'t\s+do
-            )\b/xiu',
+        'xah' => '/\b(xah)\b/iu',
+        'emacs' => '/\b(emacs)\b/iu',
+        'unix' => '/\b(unix|linux|posix|bash)\b/iu',
+        'microsoft' => '/\b(microsoft|ms|bill\s+gates)\b/iu',
         'programming' => '/\b(
             variable
             |source\s*code|software|computer\s+science
@@ -26,12 +29,9 @@ return [
             |javascript|python|golang
             )\b/xiu',
         'keyboard' => '/\b(keyboards?|shortcuts?)\b/iu',
-        'bot' => '/\b(bot|robot|ai|parrot)\b/iu',
-        'emacs' => '/\b(emacs)\b/iu',
-        'code-editor-other' => '/\b(vim|vscode|sublime|jetbrains)\b/iu',
-        'unix' => '/\b(unix|linux|posix|bash)\b/iu',
-        'microsoft' => '/\b(microsoft|ms|bill\s+gates)\b/iu',
+        'other-code-editor' => '/\b(vim|vscode|sublime|jetbrains)\b/iu',
         'java' => '/\b(java|jvm|jdk|jre|jar|spring)\b/iu',
         'work' => '/\b(work|job)\b/iu',
+        'bot' => '/\b(bot|robot|ai|parrot)\b/iu',
     ]
 ];

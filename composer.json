@@ -3,6 +3,14 @@
     "autoload": {
         "psr-4": {
             "QuoteBot\\": "src"
+        },
+        "files": [
+            "helpers/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "QuoteBotTests\\": "tests"
         }
     },
     "require": {
@@ -14,6 +22,10 @@
     },
     "require-dev": {
         "psy/psysh": "^0.11.5",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.7",
+        "friendsofphp/php-cs-fixer": "^3.8",
+        "phpstan/phpstan": "^1.7",
+        "phpmd/phpmd": "^2.12"
     }
 }

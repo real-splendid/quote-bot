@@ -3,31 +3,28 @@
 namespace QuoteBot;
 
 use Carbon\CarbonImmutable;
-use Psr\Log\LoggerInterface;
 
 class Cooldown
 {
     private CarbonImmutable $readyTime;
 
-    public function __construct(private int $intervalInMinutes, private LoggerInterface $logger)
+    public function __construct(private int $intervalInMinutes)
     {
-        $this->readyTime = CarbonImmutable::now();
+        $this->readyTime = new CarbonImmutable();
     }
 
-    public function reset()
+    public function start(): void
     {
         $this->readyTime = CarbonImmutable::now()->addMinutes($this->intervalInMinutes);
-        $this->logger->info('Cooldown reset', [$this->readyTime->toDateTimeLocalString()]);
     }
 
     public function isReady(): bool
     {
-        $this->logger->info('readyTime', [$this->readyTime->toDateTimeLocalString()]);
-        if (CarbonImmutable::now()->lessThan($this->readyTime)) {
-            $this->logger->info('cooldown');
-            return false;
-        }
+        return CarbonImmutable::now()->greaterThanOrEqualTo($this->readyTime);
+    }
 
-        return true;
+    public function toDateTimeLocalString(): string
+    {
+        return $this->readyTime->toDateTimeLocalString();
     }
 }

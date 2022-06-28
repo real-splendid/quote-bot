@@ -2,38 +2,47 @@
 
 use QuoteBot\Quote;
 
+// TODO: create quote object on demand later, but maintain convenient structure for configuration
+// I did objects here to detect structure misses on init stage.
 return [
+    // new Quote('You miss 100 percent of the shots you never take.', 'Wayne Gretzky'),
+    // new Quote('Not on my watch!'),
+    
     'greeting' => [
         new Quote('Say hello to my little friend!', 'Scarface'),
         new Quote('A star shines on the hour of our meeting!', 'J.R.R. Tolkien'),
         new Quote('Hello world!'),
     ],
     'bye' => [
-        new Quote('I\'ll be back.', 'The Terminator'),
+        // new Quote('I\'ll be back.', 'The Terminator'),
         new Quote('Hasta la Vista, baby.', 'The Terminator'),
     ],
-    'support' => [
-        new Quote('You miss 100 percent of the shots you never take.', 'Wayne Gretzky'),
-        // new Quote('Not on my watch!'), // ?
+    'xah' => [
+        new Quote('age sex location?', 'Xah Lee'),
+        new Quote('unix Sys Admin: noun. a person who is interested in computer science and literature but understands neither.', 'Xah Lee, ~2002'),
     ],
     'emacs' => [
         new Quote('An infinite number of monkeys typing into GNU Emacs would never make a good program.', 'Linus Torvalds'),
         new Quote('Emacs is a nice operating system, but I prefer UNIX.', 'Tom Christiansen'),
-        new Quote('Calling EMACS an editor is like calling the Earth a hunk of dirt.', 'Chris DiBona'),
         new Quote('Mb I should buy foot pedal for Ctrl key :thinking:'),
+        new Quote('Buy my tutorial. Show some love.', 'Xah Lee'),
     ],
-    'code-editor-other' => [
+    'other-code-editor' => [
         new Quote('Use emacs instead.'),
         new Quote('I\'ve been using Vim for about 2 years now. Mostly because I can\'t figure out how to exit it.'),
     ],
     'unix' => [
         new Quote('Linux is only free if your time has no value.', 'Jamie Zawinski'),
-        new Quote('Just don’t create a file called `-rf.`', 'Larry Wall'),
         new Quote('People disagree with me. I just ignore them.', 'Linus Torvalds'),
+        new Quote("Last week i bought a chainsaw with a twisted handle. Perhaps i wasn't careful, but by accident it chopped one of my arm off, then i thought to myself “gosh, this is POWERFUL!”. This seems to be the fashionable mode of thinking among the unixers or unixer-to-be, who would equate power and flexibility with rawness and complexity; disciplined by repeated accidents. Such a tool would first chop off the user's brain, molding a mass of brainless imbeciles and microcephalic charlatans the likes of Larry Wall and Linus Torvald jolly asses.", 'Xah Lee'),
+
     ],
     'keyboard' => [
         new Quote('Keyboard not found...Press any F1 to continue.'),
         new Quote('I am not a keyboard person. The mouse is better.'),
+        new Quote('do you have enough keyboards?', 'infu'),
+        new Quote('If I could live in a mouse-free zone, I think I would.', 'myrkraverk'),
+        new Quote('A good ergonomic design is worth 1000 keyboard layouts', 'Lunarus'),
     ],
     'bot' => [
         // new Quote('It\'s alive! It\'s alive!', 'Frankenstein (1931)'),
@@ -52,14 +61,14 @@ return [
     ],
     'programming' => [
         new Quote('Let’s call it an accidental feature.', 'Larry Wall'),
-        new Quote('One of my most productive days was throwing away 1000 lines of code.', 'Ken Thompson'),
+        // new Quote('One of my most productive days was throwing away 1000 lines of code.', 'Ken Thompson'),
         new Quote('I don\'t care if it works on your machine! We are not shipping your machine!', 'Vidiu'),
-        new Quote('First, solve the problem.Then write the code.', 'John Johnson'),
+        new Quote('First, solve the problem. Then write the code.', 'John Johnson'),
         new Quote('The function of a good software is to make the complex appear to be simple.', 'Grady Booch'),
         new Quote('Computers do not solve problems, they execute solutions.'),
         new Quote('Any fool can use a computer. Many do.', 'Ted Nelson'),
         new Quote('Talk is cheap. Show me the code.', 'Linus Torvalds'),
-        new Quote('There is nothing quite so permanent as a quick fix.', 'Unknown'),
+        new Quote('There is nothing quite so permanent as a quick fix.'),
         new Quote('Simplicity is prerequisite for reliability.', 'Edsger W. Dijkstra'),
     ],
     'java' => [
