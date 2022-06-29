@@ -24,6 +24,7 @@ class Quote
 
     public function __toString(): string
     {
-        return $this->isUnknownSource() ? $this->text : "{$this->text} | {$this->source}";
+        $delimiter = ':small_orange_diamond:';
+        return $this->isUnknownSource() ? $this->text : "{$this->text} {$delimiter} {$this->source}";
     }
 }

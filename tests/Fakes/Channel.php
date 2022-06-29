@@ -1,27 +1,32 @@
 <?php
 
-namespace QuoteBotTests;
+namespace QuoteBotTests\Fakes;
 
-use QuoteBot\Contracts\ChannelMessenger;
+use QuoteBot\Contracts\BotChannel;
 
-class FakeMessenger implements ChannelMessenger
+class Channel implements BotChannel
 {
     private array $channelsMessages = [];
 
-    public function getId(): string
+    public function getBotId(): string
     {
         return 'fakeId';
     }
 
-    public function isChannelAvailable($channelId): bool
+    public function isChannelAvailable(string $channelId): bool
     {
         return true;
     }
 
-    public function send($channelId, $text, $delay = 0): void
+    public function send(string $channelId, string $text, int $delay = 0): void
     {
         $this->channelsMessages[$channelId] = $this->channelsMessages[$channelId] ?? [];
         $this->channelsMessages[$channelId][] = compact('text', 'delay');
+    }
+
+    public function deleteMessage(string $channelId, string $messageId): void
+    {
+        // TODO: 
     }
 
     public function getChannelMessages($channelId)

@@ -5,13 +5,13 @@ namespace QuoteBot;
 use Illuminate\Support\Collection;
 use LogicException;
 use Psr\Log\LoggerInterface;
-use QuoteBot\Contracts\ChannelMessage;
-use QuoteBot\Contracts\ChannelMessenger;
+use QuoteBot\Contracts\BotChannel;
 
 class Bot
 {
     private array $availableChannelIds = [];
     private array $channelCooldowns = [];
+    private array $masterUserIds = [];
     private int $cooldownInMinutes = 0;
     private int $messageDelayInSeconds = 0;
     private array $quotes = [];
@@ -20,13 +20,14 @@ class Bot
     private string $welcomeText;
 
     public function __construct(
-        private ChannelMessenger $messenger,
+        private BotChannel $botChannel,
         private array $settings,
         private LoggerInterface $logger
     ) {
         $this->messageDelayInSeconds = $this->settings['bot']['messageDelayInSeconds'];
         $this->welcomeText = $this->settings['bot']['welcomeText'];
         $this->cooldownInMinutes = $this->settings['bot']['cooldownInMinutes'];
+        $this->masterUserIds = $this->settings['bot']['masterUserIds'];
         $this->themePatterns = $this->settings['themePatterns'];
         $this->quotes = require $this->settings['quotesPath'];
 
@@ -34,18 +35,16 @@ class Bot
         $this->sendWelcomeMessage();
     }
 
-    public function handleIncomingMessage(ChannelMessage $message): void
+    public function handleIncomingMessage(string $authorId, string $channelId, string $messageContent): void
     {
-        if ($message->getAuthorId() === $this->messenger->getId()) {
+        if ($authorId === $this->botChannel->getBotId()) {
             return;
         }
 
-        $channelId = $message->getChannelId();
         if (!in_array($channelId, $this->availableChannelIds)) {
             return;
         }
 
-        $messageContent = $message->getContent();
         $this->logger->info('received message', [$messageContent, $channelId]);
         if ($this->isOnCooldown($channelId)) {
             return;
@@ -61,13 +60,29 @@ class Bot
         $this->logger->info('Cooldown', [$this->channelCooldowns[$channelId]->toDateTimeLocalString()]);
         $citation = formatAsCitation($messageContent);
         $responseText = "{$citation}\n{$responseQuote}";
-        $this->messenger->send($channelId, $responseText, $this->messageDelayInSeconds);
+        $this->botChannel->send($channelId, $responseText, $this->messageDelayInSeconds);
+    }
+
+    public function handleReaction(
+        string $channelId,
+        string $messageId,
+        string $reactionUserId,
+        string $emojiName,
+        string $authorId
+    ) {
+        $shouldDeleteMessage = $emojiName === Emoji::RED_CROSS
+            && in_array($reactionUserId, $this->masterUserIds)
+            && $authorId === $this->botChannel->getBotId();
+        if ($shouldDeleteMessage) {
+            $this->logger->info('deleting message', [$messageId]);
+            $this->botChannel->deleteMessage($channelId, $messageId);
+        }
     }
 
     private function setupChannels(array $channelIds): void
     {
         foreach ($channelIds as $channelId) {
-            if ($this->messenger->isChannelAvailable($channelId)) {
+            if ($this->botChannel->isChannelAvailable($channelId)) {
                 $this->availableChannelIds[] = $channelId;
                 $this->channelCooldowns[$channelId] = new Cooldown($this->cooldownInMinutes);
                 $this->logger->info('channel added', [$channelId]);
@@ -83,7 +98,7 @@ class Bot
 
         foreach ($this->availableChannelIds as $channelId) {
             $this->logger->info("Sending welcome message to channel {$channelId}");
-            $this->messenger->send($channelId, $this->welcomeText, 0);
+            $this->botChannel->send($channelId, $this->welcomeText, 0);
         }
     }
 

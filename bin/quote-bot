@@ -7,13 +7,13 @@ require_once "{$applicationPath}/vendor/autoload.php";
 
 use Discord\Discord;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\WebSockets\MessageReaction;
 use Discord\WebSockets\Event;
 use Dotenv\Dotenv;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use QuoteBot\Bot;
-use QuoteBot\DiscordMessage;
-use QuoteBot\DiscordMessenger;
+use QuoteBot\DiscordBotChannel;
 
 $dotenv = Dotenv::createImmutable($applicationPath);
 $dotenv->safeLoad();
@@ -24,16 +24,47 @@ $logger->pushHandler(new StreamHandler('php://stdout', $settings['logLevel']));
 
 $discord = new Discord(['token' => $settings['bot']['token'], 'logger' => $logger]);
 $discord->on('ready', function (Discord $discord) use ($settings, $logger) {
-    $messenger = new DiscordMessenger($discord);
-    $bot = new Bot($messenger, $settings, $logger);
+    $botChannel = new DiscordBotChannel($discord);
+    $bot = new Bot($botChannel, $settings, $logger);
 
     $discord->on(Event::MESSAGE_CREATE, function (Message $message) use ($bot, $logger) {
         try {
-            $wrappedMessage = new DiscordMessage($message);
-            $bot->handleIncomingMessage($wrappedMessage);
+            $bot->handleIncomingMessage(
+                $message->author->id,
+                $message->channel_id,
+                $message->content
+            );
         } catch (Throwable $th) {
             $logger->error($th->getMessage(), $th->getTrace());
         }
     });
+
+    $discord->on(
+        Event::MESSAGE_REACTION_ADD,
+        function (MessageReaction $reaction, Discord $discord) use ($bot, $logger) {
+            $discord->getChannel($reaction->channel_id)
+                ->messages
+                ->fetch($reaction->message_id)
+                ->done(
+                    function (Message $message) use ($bot, $reaction, $logger) {
+                        try {
+                            // FIXME mb
+                            $bot->handleReaction(
+                                $reaction->channel_id,
+                                $reaction->message_id,
+                                $reaction->user_id,
+                                $reaction->emoji->name,
+                                $message->author->id,
+                            );
+                        } catch (Throwable $th) {
+                            $logger->error($th->getMessage(), $th->getTrace());
+                        }
+                    },
+                    function (Throwable $th) use ($logger) {
+                        $logger->error($th->getMessage(), $th->getTrace());
+                    }
+                );
+        }
+    );
 });
 $discord->run();

@@ -11,6 +11,7 @@ return [
         'messageDelayInSeconds' => env('DISCORD_BOT_MESSAGE_DELAY_IN_SECONDS', 2),
         'welcomeText' => env('DISCORD_BOT_WELCOME_TEXT', ""),
         'cooldownInMinutes' => env('DISCORD_BOT_COOLDOWN_IN_MINUTES', 25),
+        'masterUserIds' => explode(',', env('DISCORD_BOT_MASTER_USER_IDS', '')),
     ],
 
     'quotesPath' => __DIR__ . '/quotes.php',

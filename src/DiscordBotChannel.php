@@ -3,9 +3,9 @@
 namespace QuoteBot;
 
 use Discord\Discord;
-use QuoteBot\Contracts\ChannelMessenger;
+use QuoteBot\Contracts\BotChannel;
 
-class DiscordMessenger implements ChannelMessenger
+class DiscordBotChannel implements BotChannel
 {
     private array $channelCache = [];
 
@@ -13,7 +13,7 @@ class DiscordMessenger implements ChannelMessenger
     {
     }
 
-    public function getId(): string
+    public function getBotId(): string
     {
         return $this->discord->id;
     }
@@ -26,7 +26,6 @@ class DiscordMessenger implements ChannelMessenger
     public function send($channelId, $text, $delay = 0): void
     {
         $channel = $this->getChannel($channelId);
-
         if ($delay === 0) {
             $channel->sendMessage($text);
             return;
@@ -36,6 +35,11 @@ class DiscordMessenger implements ChannelMessenger
             $delay,
             fn () => $channel->sendMessage($text)
         );
+    }
+
+    public function deleteMessage(string $channelId, string $messageId): void
+    {
+        $this->discord->getChannel($channelId)->deleteMessages([$messageId]);
     }
 
     private function getChannel($channelId)
