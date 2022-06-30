@@ -51,6 +51,12 @@ class Bot
         }
 
         $this->logger->info('handling message', [$messageContent]);
+
+        if (hasCitation($messageContent)) {
+            $this->logger->info('skip message with citation');
+            return;
+        }
+
         $responseQuote = $this->getResponseQuoteForText($messageContent);
         if ($responseQuote->isEmpty()) {
             return;
@@ -68,11 +74,15 @@ class Bot
         string $messageId,
         string $reactionUserId,
         string $emojiName,
-        string $authorId
+        string $messageAuthorId
     ) {
+        if ($messageAuthorId !== $this->botChannel->getBotId()) {
+            return;
+        }
+
+        $this->logger->info('received reaction', [$emojiName]);
         $shouldDeleteMessage = $emojiName === Emoji::RED_CROSS
-            && in_array($reactionUserId, $this->masterUserIds)
-            && $authorId === $this->botChannel->getBotId();
+            && in_array($reactionUserId, $this->masterUserIds);
         if ($shouldDeleteMessage) {
             $this->logger->info('deleting message', [$messageId]);
             $this->botChannel->deleteMessage($channelId, $messageId);

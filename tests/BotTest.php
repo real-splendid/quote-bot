@@ -63,4 +63,17 @@ class BotTest extends TestCase
         $this->assertMatchesRegularExpression('/vim.+exit/iu', $secondChannelMessages[1]['text']);
         $this->assertSame([], $otherChannelMessages);
     }
+
+    public function testNotRespondCitation()
+    {
+        $messageText1 = "> some citation\nxah theme";
+        // $messageText1 = "> line 1\n> line2\nxah";
+
+        $channelMessagesBefore = $this->messenger->getChannelMessages($this->firstChannelId);
+        $this->bot->handleIncomingMessage('authorId', $this->firstChannelId, $messageText1);
+        $channelMessagesAfter = $this->messenger->getChannelMessages($this->firstChannelId);
+
+        $this->assertCount(1, $channelMessagesBefore);
+        $this->assertCount(1, $channelMessagesAfter);
+    }
 }

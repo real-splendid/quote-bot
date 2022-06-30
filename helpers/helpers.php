@@ -10,3 +10,9 @@ function formatAsCitation(string $text): string
         ->replace("\n", "\n> ")
         ->prepend('> ');
 }
+
+function hasCitation(string $text): bool
+{
+    $textObject = Str::of($text);
+    return $textObject->startsWith('>') || $textObject->contains("\n>");
+}
