@@ -11,7 +11,6 @@ return [
     'greeting' => [
         new Quote('Say hello to my little friend!', 'Scarface'),
         new Quote('A star shines on the hour of our meeting!', 'J.R.R. Tolkien'),
-        new Quote('Hello world!'),
     ],
     'bye' => [
         // new Quote('I\'ll be back.', 'The Terminator'),
@@ -46,13 +45,13 @@ return [
     ],
     'bot' => [
         // new Quote('It\'s alive! It\'s alive!', 'Frankenstein (1931)'),
-        new Quote('They did not know it was impossible, so they did it!', 'Mark Twain'),
+        // new Quote('They did not know it was impossible, so they did it!', 'Mark Twain'),
         new Quote('You can kill a man but you can’t kill an idea.', 'Medgar Evers'),
-        new Quote('Power belongs to those who take it.', 'Mr. Robot (2015)'),
+        // new Quote('Power belongs to those who take it.', 'Mr. Robot (2015)'),
         new Quote('Artificial Intelligence usually beats natural stupidity.'),
         new Quote('Anything Less Than Immortality Is A Complete Waste Of Time.', 'Futurama'),
         new Quote('Of All The Friends I\'ve Had, You\'re The First.', 'Futurama'),
-        new Quote('I\'m Going To Build My Own Theme Park! With Blackjack! And Hookers!', 'Futurama'),
+        // new Quote('I\'m Going To Build My Own Theme Park! With Blackjack! And Hookers!', 'Futurama'),
     ],
     'microsoft' => [
         new Quote('Microsoft is not the answer. Microsoft is the question. \"No\" is the answer.', 'Erik Naggum'),
@@ -63,13 +62,13 @@ return [
         new Quote('Let’s call it an accidental feature.', 'Larry Wall'),
         // new Quote('One of my most productive days was throwing away 1000 lines of code.', 'Ken Thompson'),
         new Quote('I don\'t care if it works on your machine! We are not shipping your machine!', 'Vidiu'),
-        new Quote('First, solve the problem. Then write the code.', 'John Johnson'),
+        // new Quote('First, solve the problem. Then write the code.', 'John Johnson'),
         new Quote('The function of a good software is to make the complex appear to be simple.', 'Grady Booch'),
         new Quote('Computers do not solve problems, they execute solutions.'),
         new Quote('Any fool can use a computer. Many do.', 'Ted Nelson'),
         new Quote('Talk is cheap. Show me the code.', 'Linus Torvalds'),
         new Quote('There is nothing quite so permanent as a quick fix.'),
-        new Quote('Simplicity is prerequisite for reliability.', 'Edsger W. Dijkstra'),
+        // new Quote('Simplicity is prerequisite for reliability.', 'Edsger W. Dijkstra'),
     ],
     'java' => [
         new Quote('Java is, in many ways, C++–.', 'Michael Feldman'),
