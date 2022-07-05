@@ -57,6 +57,11 @@ class Bot
             return;
         }
 
+        if (substr_count($messageContent, "\n") > 3) {
+            $this->logger->info('skip message message with many lines');
+            return;
+        }
+
         $responseQuote = $this->getResponseQuoteForText($messageContent);
         if ($responseQuote->isEmpty()) {
             return;
