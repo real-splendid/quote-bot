@@ -30,7 +30,14 @@ make test
 make run
 ```
 
-> ☝️ **Note**<br>
+> **Note**<br>
 > For bot to work, after `make setup`, you need to configure DISCORD_BOT_TOKEN and DISCORD_BOT_CHANNEL_IDS env variables. You can do it in `.env` file.
+
+
+## TODO
+* add db with quotes and commands to manage them by admins
+* save cooldown state in db
+* add "theme cooldowns"
+* add quotes
 
 ![parrot](https://user-images.githubusercontent.com/48528017/176316247-e408c0f1-0870-4a01-9981-358fadcb5cb5.jpg)
