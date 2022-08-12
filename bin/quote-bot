@@ -42,9 +42,13 @@ $discord->on('ready', function (Discord $discord) use ($settings, $logger) {
     $discord->on(
         Event::MESSAGE_REACTION_ADD,
         function (MessageReaction $reaction, Discord $discord) use ($bot, $logger) {
-            $discord->getChannel($reaction->channel_id)
-                ->messages
-                ->fetch($reaction->message_id)
+            $channel = $discord->getChannel($reaction->channel_id);
+            if ($channel === null) {
+                $logger->warning('Failed to get channel');
+                return;
+            }
+
+            $channel->messages->fetch($reaction->message_id)
                 ->done(
                     function (Message $message) use ($bot, $reaction, $logger) {
                         try {
